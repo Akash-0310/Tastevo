@@ -9,6 +9,10 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
+        secure: false,
+        configure: (proxy) => {
+          proxy.on('error', (err) => console.error('[proxy error]', err.message))
+        },
       },
     },
   },
