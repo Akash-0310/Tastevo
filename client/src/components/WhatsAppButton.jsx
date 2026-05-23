@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { FaWhatsapp } from 'react-icons/fa';
+import { whatsappUrl } from '../config/constants';
 
 const WhatsAppButton = () => {
   const [isHovered, setIsHovered] = useState(false);
-  const phone = '919876543210';
-  const message = encodeURIComponent('Hi! I would like to place an order from Tastevo.');
 
   return (
     <a
-      href={`https://wa.me/${phone}?text=${message}`}
+      href={whatsappUrl()}
       target="_blank"
       rel="noopener noreferrer"
       className={`whatsapp-btn ${isHovered ? 'whatsapp-btn--hovered' : ''}`}

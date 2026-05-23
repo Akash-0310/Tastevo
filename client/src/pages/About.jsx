@@ -55,12 +55,12 @@ const values = [
 ];
 
 const milestones = [
-  { year: '2020', title: 'The Beginning', desc: 'Started as a small cloud kitchen in Koramangala with just 5 dishes and a dream to revolutionize food delivery.' },
-  { year: '2021', title: 'Going Digital', desc: 'Launched our QR-code digital menu system, becoming one of the first restaurants in Bangalore to go fully contactless.' },
-  { year: '2022', title: 'Rapid Growth', desc: 'Expanded to 3 locations across Bangalore. Crossed 10,000 orders per month and won Best New Restaurant award.' },
-  { year: '2023', title: 'Awards & Recognition', desc: 'Featured in Times Food Awards. Chef Arjun recognized as Top 30 Under 30 in Indian culinary scene.' },
-  { year: '2024', title: '50K+ Customers', desc: 'Reached the milestone of 50,000 happy customers. Launched our signature Veg Thali that became an instant bestseller.' },
-  { year: '2025', title: 'The Future', desc: 'Expanding to 5 new cities. Introducing AI-powered personalized menu recommendations and 15-minute delivery.' },
+  { year: '2020', title: 'The Beginning',   desc: 'Started as a small cloud kitchen in Koramangala with a handful of signature dishes and a dream to make great food accessible to everyone.' },
+  { year: '2021', title: 'Going Digital',   desc: 'Launched our QR-code digital menu — no apps, no logins, just scan and browse. Fully contactless ordering via WhatsApp.' },
+  { year: '2022', title: 'Growing Menu',    desc: 'Expanded our menu to 30+ dishes across four categories. Introduced seasonal specials and our now-iconic Veg Thali.' },
+  { year: '2023', title: 'Community Roots', desc: 'Started sourcing from local organic farms. Launched our 1% meals pledge — a portion of every order goes to feeding children in need.' },
+  { year: '2024', title: 'Built for Scale', desc: 'Rebuilt the ordering platform to handle volume. Faster response times, better WhatsApp order flow, and a shareable digital menu link.' },
+  { year: '2025', title: 'What\'s Next',    desc: 'We\'re working on a real-time menu management system, direct online ordering, and expanding to serve more of Bangalore.' },
 ];
 
 const About = () => {
@@ -254,18 +254,18 @@ const About = () => {
             <div className="cta-section__stats">
               <div>
                 <MdDeliveryDining className="cta-section__stat-icon" />
-                <strong>2 Lakh+</strong>
-                <span>Orders Delivered</span>
+                <strong>30 Min</strong>
+                <span>Avg. Delivery</span>
               </div>
               <div>
                 <FiTarget />
                 <strong>Zero</strong>
-                <span>Food Waste</span>
+                <span>Artificial Preservatives</span>
               </div>
               <div>
                 <FiStar />
-                <strong>4.9/5</strong>
-                <span>Customer Rating</span>
+                <strong>FSSAI</strong>
+                <span>Certified Kitchen</span>
               </div>
             </div>
           </AnimatedSection>

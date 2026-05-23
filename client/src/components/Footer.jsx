@@ -2,29 +2,40 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MdRestaurantMenu } from 'react-icons/md';
 import { FiMapPin, FiPhone, FiMail, FiClock, FiInstagram, FiFacebook, FiTwitter, FiYoutube } from 'react-icons/fi';
+import { BUSINESS_PHONE, BUSINESS_EMAIL, BUSINESS_ADDRESS, BUSINESS_HOURS } from '../config/constants';
 
 const Footer = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail]           = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [subError, setSubError]     = useState('');
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
+    setSubError('');
+
+    // Basic email format check before hitting the server
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setSubError('Please enter a valid email address.');
+      return;
+    }
+
     try {
-      const res = await fetch('/api/subscribe', {
-        method: 'POST',
+      const res  = await fetch('/api/subscribe', {
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body:    JSON.stringify({ email }),
       });
       const data = await res.json();
+
       if (data.success) {
         setSubscribed(true);
         setEmail('');
-        setTimeout(() => setSubscribed(false), 3000);
+        setTimeout(() => setSubscribed(false), 4000);
+      } else {
+        setSubError(data.error || 'Subscription failed. Please try again.');
       }
     } catch {
-      setSubscribed(true);
-      setEmail('');
-      setTimeout(() => setSubscribed(false), 3000);
+      setSubError('Network error. Please check your connection and try again.');
     }
   };
 
@@ -44,14 +55,15 @@ const Footer = () => {
               <span>Taste<span className="text-accent">vo</span></span>
             </Link>
             <p className="footer__desc">
-              Bringing authentic flavours to your table since 2020. Experience the perfect blend
-              of traditional recipes and modern culinary artistry. Every dish tells a story.
+              Authentic flavours, crafted with care. Browse our digital menu,
+              discover handcrafted dishes made from fresh ingredients, and order
+              instantly via WhatsApp. Every dish tells a story.
             </p>
             <div className="footer__social">
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FiInstagram /></a>
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><FiFacebook /></a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><FiTwitter /></a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><FiYoutube /></a>
+              <a href="https://facebook.com"  target="_blank" rel="noopener noreferrer" aria-label="Facebook"><FiFacebook /></a>
+              <a href="https://twitter.com"   target="_blank" rel="noopener noreferrer" aria-label="Twitter"><FiTwitter /></a>
+              <a href="https://youtube.com"   target="_blank" rel="noopener noreferrer" aria-label="YouTube"><FiYoutube /></a>
             </div>
           </div>
 
@@ -67,9 +79,9 @@ const Footer = () => {
 
           <div className="footer__section">
             <h4>Menu Categories</h4>
-            <Link to="/menu">Starters & Appetizers</Link>
+            <Link to="/menu">Starters &amp; Appetizers</Link>
             <Link to="/menu">Main Course</Link>
-            <Link to="/menu">Desserts & Sweets</Link>
+            <Link to="/menu">Desserts &amp; Sweets</Link>
             <Link to="/menu">Beverages</Link>
             <Link to="/menu">Chef's Special</Link>
             <Link to="/menu">Combo Meals</Link>
@@ -79,19 +91,19 @@ const Footer = () => {
             <h4>Contact Info</h4>
             <div className="footer__contact-item">
               <FiMapPin />
-              <span>123 Foodie Street, Koramangala, Bangalore 560034</span>
+              <span>{BUSINESS_ADDRESS}</span>
             </div>
             <div className="footer__contact-item">
               <FiPhone />
-              <span>+91 98765 43210</span>
+              <span>{BUSINESS_PHONE}</span>
             </div>
             <div className="footer__contact-item">
               <FiMail />
-              <span>hello@tastevo.in</span>
+              <span>{BUSINESS_EMAIL}</span>
             </div>
             <div className="footer__contact-item">
               <FiClock />
-              <span>Mon-Sun: 11:00 AM - 11:00 PM</span>
+              <span>{BUSINESS_HOURS}</span>
             </div>
           </div>
         </div>
@@ -106,21 +118,26 @@ const Footer = () => {
               type="email"
               placeholder="Enter your email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => { setEmail(e.target.value); setSubError(''); }}
               required
+              aria-label="Email for newsletter"
             />
             <button type="submit" className="btn btn--primary">
-              {subscribed ? 'Subscribed!' : 'Subscribe'}
+              {subscribed ? '✓ Subscribed!' : 'Subscribe'}
             </button>
           </form>
+          {subError && (
+            <p style={{ color: 'var(--color-error, #e53e3e)', marginTop: '0.5rem', fontSize: '0.875rem' }}>
+              {subError}
+            </p>
+          )}
         </div>
 
         <div className="footer__bottom">
           <p>&copy; {new Date().getFullYear()} Tastevo. All rights reserved.</p>
           <div className="footer__bottom-links">
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#terms">Terms of Service</a>
-            <a href="#cookies">Cookie Policy</a>
+            <Link to="/privacy">Privacy Policy</Link>
+            <Link to="/terms">Terms of Service</Link>
           </div>
         </div>
       </div>

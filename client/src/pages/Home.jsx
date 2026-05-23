@@ -2,10 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import AnimatedSection from '../components/AnimatedSection';
-import { FiArrowRight, FiClock, FiTruck, FiShield, FiStar, FiUsers, FiAward, FiHeart } from 'react-icons/fi';
+import { FiArrowRight, FiClock, FiTruck, FiShield, FiStar, FiAward, FiHeart, FiMessageCircle } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { MdRestaurantMenu, MdDeliveryDining, MdFoodBank } from 'react-icons/md';
 import { QRCodeSVG } from 'qrcode.react';
+import { whatsappUrl, WHATSAPP_NUMBER } from '../config/constants';
 
 const featuredItems = [
   {
@@ -39,35 +40,14 @@ const featuredItems = [
 ];
 
 const stats = [
-  { icon: <FiUsers />, number: '50,000+', label: 'Happy Customers' },
-  { icon: <MdFoodBank />, number: '200+', label: 'Menu Items' },
-  { icon: <FiAward />, number: '15+', label: 'Awards Won' },
-  { icon: <FiStar />, number: '4.9', label: 'Average Rating' },
+  { icon: <FiShield />,        number: '100%',  label: 'Fresh Ingredients'   },
+  { icon: <FiClock />,         number: '30 Min', label: 'Avg. Delivery Time'  },
+  { icon: <MdFoodBank />,      number: '30+',   label: 'Signature Dishes'    },
+  { icon: <FiAward />,         number: 'FSSAI', label: 'Certified Kitchen'   },
 ];
 
-const testimonials = [
-  {
-    name: 'Priya Sharma',
-    role: 'Food Blogger',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
-    text: 'Tastevo has completely transformed how I order food. The digital menu is so intuitive, and the food quality is consistently outstanding. Their butter chicken is the best in Bangalore!',
-    rating: 5,
-  },
-  {
-    name: 'Rahul Patel',
-    role: 'Regular Customer',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
-    text: 'The WhatsApp ordering feature is genius! No more waiting on hold. I just scan the QR code, pick my items, and order directly. Delivery is always on time and food is piping hot.',
-    rating: 5,
-  },
-  {
-    name: 'Ananya Reddy',
-    role: 'Corporate Client',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
-    text: 'We order from Tastevo for all our office events. The combo meals are great value, and they handle bulk orders seamlessly. The veg options are particularly impressive.',
-    rating: 5,
-  },
-];
+// Testimonials will be loaded from the database in Phase 2.
+// For now we invite real customers to share their experience.
 
 const Home = () => {
   return (
@@ -123,7 +103,7 @@ const Home = () => {
                 <MdRestaurantMenu /> Explore Menu
               </Link>
               <a
-                href="https://wa.me/919876543210?text=Hi!%20I%20want%20to%20order"
+                href={whatsappUrl('Hi! I want to order')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn--whatsapp btn--lg"
@@ -286,7 +266,7 @@ const Home = () => {
                     <div className="featured__footer">
                       <span className="featured__price">₹{item.price}</span>
                       <a
-                        href={`https://wa.me/919876543210?text=${encodeURIComponent(`I'd like to order ${item.name}`)}`}
+                        href={whatsappUrl(`I'd like to order ${item.name}`)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn btn--sm btn--whatsapp"
@@ -308,34 +288,38 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Share Your Experience */}
       <section className="testimonials section">
         <div className="container">
           <AnimatedSection className="section__header">
-            <span className="section__badge">What People Say</span>
-            <h2 className="section__title">Loved by Thousands</h2>
+            <span className="section__badge">Your Feedback Matters</span>
+            <h2 className="section__title">Share Your Experience</h2>
             <p className="section__subtitle">
-              Don't just take our word for it — hear from our community of food lovers
-              who keep coming back for more.
+              Tried something you loved? We'd genuinely love to hear about it.
+              Your honest feedback helps us serve you better — every single time.
             </p>
           </AnimatedSection>
 
-          <div className="testimonials__grid">
-            {testimonials.map((t, i) => (
-              <AnimatedSection key={i} delay={i * 0.15} className="testimonial-card">
-                <div className="testimonial-card__stars">
-                  {[...Array(t.rating)].map((_, j) => (
-                    <FiStar key={j} className="testimonial-card__star" />
-                  ))}
+          <div className="testimonials__invite" style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center', marginTop: '2rem' }}>
+            {[
+              { icon: <FiMessageCircle />, title: 'Tell us on WhatsApp', desc: 'Send us a quick message — what you loved, what we can improve. We read every message.', cta: 'Send Feedback', href: whatsappUrl('Hi! I wanted to share my experience with Tastevo:') },
+              { icon: <FiStar />, title: 'Rate us on Google', desc: 'A Google review helps other food lovers find us and tells us how we\'re doing.', cta: 'Leave a Review', href: 'https://g.page/r/tastevo' },
+            ].map((card, i) => (
+              <AnimatedSection key={i} delay={i * 0.15} className="testimonial-card" style={{ flex: '1 1 280px', maxWidth: '360px' }}>
+                <div className="testimonial-card__stars" style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--color-primary)' }}>
+                  {card.icon}
                 </div>
-                <p className="testimonial-card__text">"{t.text}"</p>
-                <div className="testimonial-card__author">
-                  <img src={t.avatar} alt={t.name} className="testimonial-card__avatar" />
-                  <div>
-                    <h4 className="testimonial-card__name">{t.name}</h4>
-                    <span className="testimonial-card__role">{t.role}</span>
-                  </div>
-                </div>
+                <h3 style={{ marginBottom: '0.5rem' }}>{card.title}</h3>
+                <p className="testimonial-card__text" style={{ fontStyle: 'normal' }}>{card.desc}</p>
+                <a
+                  href={card.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn--primary"
+                  style={{ marginTop: '1rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                >
+                  {card.cta}
+                </a>
               </AnimatedSection>
             ))}
           </div>

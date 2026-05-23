@@ -1,59 +1,91 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import AnimatedSection from '../components/AnimatedSection';
-import { FiMapPin, FiPhone, FiMail, FiClock, FiSend, FiCheck } from 'react-icons/fi';
+import { FiMapPin, FiPhone, FiMail, FiClock, FiSend, FiCheck, FiAlertCircle } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
+import { whatsappUrl, BUSINESS_PHONE, BUSINESS_EMAIL, BUSINESS_ADDRESS, BUSINESS_HOURS } from '../config/constants';
+
+const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
 const Contact = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
-  const [reserveData, setReserveData] = useState({ name: '', email: '', phone: '', date: '', time: '', guests: '2', notes: '' });
-  const [status, setStatus] = useState('');
-  const [reserveStatus, setReserveStatus] = useState('');
-  const [activeTab, setActiveTab] = useState('contact');
+  const [formData,     setFormData]     = useState({ name: '', email: '', phone: '', message: '' });
+  const [reserveData,  setReserveData]  = useState({ name: '', email: '', phone: '', date: '', time: '', guests: '2', notes: '' });
+  const [status,       setStatus]       = useState('');   // '' | 'sending' | 'success' | 'error'
+  const [statusMsg,    setStatusMsg]    = useState('');
+  const [reserveStatus,setReserveStatus]= useState('');
+  const [reserveMsg,   setReserveMsg]   = useState('');
+  const [activeTab,    setActiveTab]    = useState('contact');
 
   const handleContact = async (e) => {
     e.preventDefault();
+    setStatusMsg('');
+
+    // Frontend validation
+    if (!isValidEmail(formData.email)) {
+      setStatus('error');
+      setStatusMsg('Please enter a valid email address.');
+      return;
+    }
+    if (formData.message.trim().length < 10) {
+      setStatus('error');
+      setStatusMsg('Message must be at least 10 characters.');
+      return;
+    }
+
     setStatus('sending');
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
+      const res  = await fetch('/api/contact', {
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body:    JSON.stringify(formData),
       });
       const data = await res.json();
       if (data.success) {
         setStatus('success');
+        setStatusMsg('');
         setFormData({ name: '', email: '', phone: '', message: '' });
-        setTimeout(() => setStatus(''), 4000);
+        setTimeout(() => setStatus(''), 5000);
       } else {
         setStatus('error');
+        setStatusMsg(data.error || 'Something went wrong. Please try again.');
       }
     } catch {
-      setStatus('success');
-      setFormData({ name: '', email: '', phone: '', message: '' });
-      setTimeout(() => setStatus(''), 4000);
+      setStatus('error');
+      setStatusMsg('Network error. Please check your connection and try again.');
     }
   };
 
   const handleReservation = async (e) => {
     e.preventDefault();
+    setReserveMsg('');
+
+    // Frontend validation
+    if (reserveData.email && !isValidEmail(reserveData.email)) {
+      setReserveStatus('error');
+      setReserveMsg('Please enter a valid email address.');
+      return;
+    }
+
     setReserveStatus('sending');
     try {
-      const res = await fetch('/api/reserve', {
-        method: 'POST',
+      const res  = await fetch('/api/reserve', {
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(reserveData),
+        body:    JSON.stringify(reserveData),
       });
       const data = await res.json();
       if (data.success) {
         setReserveStatus('success');
+        setReserveMsg('');
         setReserveData({ name: '', email: '', phone: '', date: '', time: '', guests: '2', notes: '' });
-        setTimeout(() => setReserveStatus(''), 4000);
+        setTimeout(() => setReserveStatus(''), 5000);
+      } else {
+        setReserveStatus('error');
+        setReserveMsg(data.error || 'Something went wrong. Please try again.');
       }
     } catch {
-      setReserveStatus('success');
-      setReserveData({ name: '', email: '', phone: '', date: '', time: '', guests: '2', notes: '' });
-      setTimeout(() => setReserveStatus(''), 4000);
+      setReserveStatus('error');
+      setReserveMsg('Network error. Please check your connection and try again.');
     }
   };
 
@@ -86,10 +118,10 @@ const Contact = () => {
         <div className="container">
           <div className="contact-info__grid">
             {[
-              { icon: <FiMapPin />, title: 'Visit Us', lines: ['123 Foodie Street', 'Koramangala, Bangalore 560034'] },
-              { icon: <FiPhone />, title: 'Call Us', lines: ['+91 98765 43210', '+91 98765 43211'] },
-              { icon: <FiMail />, title: 'Email Us', lines: ['hello@tastevo.in', 'orders@tastevo.in'] },
-              { icon: <FiClock />, title: 'Working Hours', lines: ['Mon-Fri: 11AM - 11PM', 'Sat-Sun: 10AM - 12AM'] },
+              { icon: <FiMapPin />, title: 'Visit Us',       lines: [BUSINESS_ADDRESS] },
+              { icon: <FiPhone />,  title: 'Call Us',        lines: [BUSINESS_PHONE]   },
+              { icon: <FiMail />,   title: 'Email Us',       lines: [BUSINESS_EMAIL]   },
+              { icon: <FiClock />,  title: 'Working Hours',  lines: [BUSINESS_HOURS]   },
             ].map((info, i) => (
               <AnimatedSection key={i} delay={i * 0.1}>
                 <motion.div className="contact-info__card" whileHover={{ y: -5 }}>
@@ -119,7 +151,7 @@ const Contact = () => {
                 <h3>Prefer WhatsApp?</h3>
                 <p>Get instant responses on WhatsApp for orders, reservations, and queries.</p>
                 <a
-                  href="https://wa.me/919876543210"
+                  href={whatsappUrl('Hi! I have a query')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn--whatsapp"
@@ -205,10 +237,15 @@ const Contact = () => {
                     className="btn btn--primary btn--lg contact-form__submit"
                     disabled={status === 'sending'}
                   >
-                    {status === 'sending' ? 'Sending...' : status === 'success' ? <><FiCheck /> Sent!</> : <><FiSend /> Send Message</>}
+                    {status === 'sending' ? 'Sending…' : status === 'success' ? <><FiCheck /> Sent!</> : <><FiSend /> Send Message</>}
                   </button>
                   {status === 'success' && (
-                    <p className="contact-form__success">Thank you! We'll get back to you soon.</p>
+                    <p className="contact-form__success"><FiCheck /> Thank you! We'll get back to you soon.</p>
+                  )}
+                  {status === 'error' && statusMsg && (
+                    <p className="contact-form__error" style={{ color: 'var(--color-error, #e53e3e)', display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.75rem' }}>
+                      <FiAlertCircle /> {statusMsg}
+                    </p>
                   )}
                 </form>
               ) : (
@@ -292,10 +329,15 @@ const Contact = () => {
                     className="btn btn--primary btn--lg contact-form__submit"
                     disabled={reserveStatus === 'sending'}
                   >
-                    {reserveStatus === 'sending' ? 'Booking...' : reserveStatus === 'success' ? <><FiCheck /> Confirmed!</> : 'Book Table'}
+                    {reserveStatus === 'sending' ? 'Booking…' : reserveStatus === 'success' ? <><FiCheck /> Confirmed!</> : 'Book Table'}
                   </button>
                   {reserveStatus === 'success' && (
-                    <p className="contact-form__success">Reservation confirmed! We look forward to serving you.</p>
+                    <p className="contact-form__success"><FiCheck /> Reservation confirmed! We look forward to serving you.</p>
+                  )}
+                  {reserveStatus === 'error' && reserveMsg && (
+                    <p className="contact-form__error" style={{ color: 'var(--color-error, #e53e3e)', display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.75rem' }}>
+                      <FiAlertCircle /> {reserveMsg}
+                    </p>
                   )}
                 </form>
               )}

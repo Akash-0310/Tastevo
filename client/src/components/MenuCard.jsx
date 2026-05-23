@@ -2,12 +2,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FaWhatsapp } from 'react-icons/fa';
 import { FiStar } from 'react-icons/fi';
+import { whatsappUrl } from '../config/constants';
 
 const MenuCard = ({ item, index }) => {
-  const phone = '919876543210';
-  const message = encodeURIComponent(
-    `Hi! I'd like to order: ${item.name} - ₹${item.price}`
-  );
+  const orderLink = whatsappUrl(`Hi! I'd like to order: ${item.name} - ₹${item.price}`);
 
   return (
     <motion.div
@@ -56,7 +54,7 @@ const MenuCard = ({ item, index }) => {
           </div>
         )}
         <a
-          href={`https://wa.me/${phone}?text=${message}`}
+          href={orderLink}
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn--whatsapp menu-card__order"

@@ -3,12 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedSection from '../components/AnimatedSection';
 import { FiChevronDown, FiSearch } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
+import { whatsappUrl, BUSINESS_PHONE } from '../config/constants';
 
 const faqCategories = {
   'Ordering & Delivery': [
     {
       q: 'How do I place an order?',
-      a: 'You can place an order in three simple ways: (1) Scan our QR code to browse the menu and tap the WhatsApp order button on any dish. (2) Browse our menu on this website and click "Order via WhatsApp". (3) Message us directly on WhatsApp at +91 98765 43210. Our team will confirm your order and provide an estimated delivery time.',
+      a: `You can place an order in three simple ways: (1) Scan our QR code to browse the menu and tap the WhatsApp order button on any dish. (2) Browse our menu on this website and click "Order via WhatsApp". (3) Message us directly on WhatsApp at ${BUSINESS_PHONE}. Our team will confirm your order and provide an estimated delivery time.`,
     },
     {
       q: 'What are your delivery areas and charges?',
@@ -232,7 +233,7 @@ const FAQ = () => {
               <p>Our support team is available 7 days a week. Get in touch through WhatsApp for instant answers or drop us a message.</p>
               <div className="faq-cta__actions">
                 <a
-                  href="https://wa.me/919876543210?text=Hi,%20I%20have%20a%20question"
+                  href={whatsappUrl('Hi, I have a question about Tastevo')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn--whatsapp btn--lg"
