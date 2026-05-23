@@ -1,10 +1,10 @@
-const express    = require('express');
-const cors       = require('cors');
-const helmet     = require('helmet');
-const rateLimit  = require('express-rate-limit');
-const { body, validationResult } = require('express-validator');
-const path       = require('path');
+const express = require('express');
+const cors    = require('cors');
+const helmet  = require('helmet');
+const path    = require('path');
 require('dotenv').config();
+
+const { connect } = require('./db');
 
 // ── Startup env check ────────────────────────────────────────
 const REQUIRED_ENV = ['PORT', 'NODE_ENV'];
@@ -12,6 +12,13 @@ const missing = REQUIRED_ENV.filter(k => !process.env[k]);
 if (missing.length) {
   console.error(`[startup] Missing required env vars: ${missing.join(', ')}`);
   process.exit(1);
+}
+
+if (!process.env.MONGODB_URI) {
+  console.warn('[startup] MONGODB_URI not set — data will NOT be persisted to database.');
+}
+if (!process.env.SMTP_USER) {
+  console.warn('[startup] SMTP_USER not set — emails will NOT be sent.');
 }
 
 const app  = express();
@@ -42,127 +49,17 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
-// ── Body parsing — 10 kb cap to prevent large-payload attacks ─
+// ── Body parsing ─────────────────────────────────────────────
 app.use(express.json({ limit: '10kb' }));
 
-// ── Rate limiters ─────────────────────────────────────────────
-// General API: 20 requests per 15 min per IP
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: 'Too many requests. Please try again later.' },
-});
-
-// Strict: 5 form submissions per hour per IP (contact / reservation)
-const formLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000,
-  max: 5,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: 'Too many submissions. Please wait before trying again.' },
-});
-
-// ── Validation helper ─────────────────────────────────────────
-const validate = (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(422).json({ error: errors.array()[0].msg });
-    return false;
-  }
-  return true;
-};
-
-// ── Contact form ──────────────────────────────────────────────
-app.post(
-  '/api/contact',
-  formLimiter,
-  [
-    body('name')
-      .trim().notEmpty().withMessage('Name is required.')
-      .isLength({ max: 100 }).withMessage('Name is too long.')
-      .escape(),
-    body('email')
-      .trim().isEmail().withMessage('A valid email address is required.')
-      .normalizeEmail(),
-    body('phone')
-      .optional({ checkFalsy: true })
-      .trim()
-      .matches(/^[\+\-\s\(\)\d]{7,20}$/).withMessage('Invalid phone number.'),
-    body('message')
-      .trim().notEmpty().withMessage('Message is required.')
-      .isLength({ min: 10, max: 1000 })
-      .withMessage('Message must be between 10 and 1000 characters.')
-      .escape(),
-  ],
-  (req, res) => {
-    if (!validate(req, res)) return;
-    const { name, email, phone, message } = req.body;
-    // TODO Phase 2: save to DB + send email via Nodemailer
-    console.log('[contact]', { name, email, phone: phone || 'N/A' });
-    res.json({ success: true, message: 'Thank you! We will get back to you soon.' });
-  }
-);
-
-// ── Newsletter subscription ───────────────────────────────────
-app.post(
-  '/api/subscribe',
-  apiLimiter,
-  [
-    body('email')
-      .trim().isEmail().withMessage('A valid email address is required.')
-      .normalizeEmail(),
-  ],
-  (req, res) => {
-    if (!validate(req, res)) return;
-    const { email } = req.body;
-    // TODO Phase 2: store in DB
-    console.log('[subscribe]', email);
-    res.json({ success: true, message: 'Successfully subscribed to our newsletter!' });
-  }
-);
-
-// ── Reservation ───────────────────────────────────────────────
-app.post(
-  '/api/reserve',
-  formLimiter,
-  [
-    body('name')
-      .trim().notEmpty().withMessage('Name is required.')
-      .isLength({ max: 100 }).withMessage('Name is too long.')
-      .escape(),
-    body('email')
-      .optional({ checkFalsy: true })
-      .trim().isEmail().withMessage('Invalid email address.')
-      .normalizeEmail(),
-    body('phone')
-      .trim().notEmpty().withMessage('Phone number is required.')
-      .matches(/^[\+\-\s\(\)\d]{7,20}$/).withMessage('Invalid phone number.'),
-    body('date')
-      .trim().notEmpty().withMessage('Date is required.')
-      .isDate({ format: 'YYYY-MM-DD' }).withMessage('Invalid date.'),
-    body('time')
-      .trim().notEmpty().withMessage('Time is required.')
-      .matches(/^([01]?\d|2[0-3]):[0-5]\d$/).withMessage('Invalid time.'),
-    body('guests')
-      .notEmpty().withMessage('Number of guests is required.'),
-    body('notes')
-      .optional({ checkFalsy: true })
-      .trim().isLength({ max: 500 }).withMessage('Notes too long.')
-      .escape(),
-  ],
-  (req, res) => {
-    if (!validate(req, res)) return;
-    const { name, email, phone, date, time, guests, notes } = req.body;
-    // TODO Phase 2: save to DB + send confirmation email
-    console.log('[reservation]', { name, email: email || 'N/A', phone, date, time, guests, notes: notes || 'None' });
-    res.json({ success: true, message: 'Reservation confirmed! We look forward to serving you.' });
-  }
-);
+// ── API routes ───────────────────────────────────────────────
+app.use('/api', require('./routes/contact.route'));
+app.use('/api', require('./routes/reservation.route'));
+app.use('/api', require('./routes/subscribe.route'));
+app.use('/api', require('./routes/menu.route'));
 
 // ── 404 for unknown API routes ────────────────────────────────
-app.use('/api/*', (_req, res) => {
+app.use('/api', (_req, res) => {
   res.status(404).json({ error: 'API endpoint not found.' });
 });
 
@@ -181,6 +78,15 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`[server] Running on port ${PORT} [${process.env.NODE_ENV}]`);
+// ── Connect DB then start server ──────────────────────────────
+const startServer = async () => {
+  await connect();
+  app.listen(PORT, () => {
+    console.log(`[server] Running on port ${PORT} [${process.env.NODE_ENV}]`);
+  });
+};
+
+startServer().catch(err => {
+  console.error('[startup] Fatal error:', err.message);
+  process.exit(1);
 });
