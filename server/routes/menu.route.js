@@ -2,29 +2,41 @@ const router    = require('express').Router();
 const { apiLimiter } = require('../middleware/rateLimiter');
 const MenuItem  = require('../models/MenuItem');
 const { isReady } = require('../db');
+const { cloudinaryFetch } = require('../utils/cloudinary');
 
 /**
- * GET /api/menu
- * Returns all available menu items grouped by category.
- * Shape: { starters: [...], mains: [...], desserts: [...], drinks: [...] }
- *
- * Falls back to empty categories if DB is not connected —
- * the frontend still uses its hardcoded data in Phase 2 (Phase 3 switches to this).
+ * Normalise a raw MenuItem document for the frontend:
+ *  - Apply Cloudinary image optimisation
+ *  - Map isNewItem → isNew (Mongoose reserved word workaround)
+ *  - Strip internal fields (__v)
  */
+const normalise = (item, imgOpts) => {
+  const { __v, isNewItem, ...rest } = item;
+  return {
+    ...rest,
+    isNew:  isNewItem ?? false,
+    image:  cloudinaryFetch(item.image, imgOpts),
+  };
+};
+
+// ── GET /api/menu ─────────────────────────────────────────────
+// Returns all available items grouped by category.
+// Shape: { starters: [...], mains: [...], desserts: [...], drinks: [...] }
 router.get('/menu', apiLimiter, async (req, res) => {
   if (!isReady()) {
     return res.status(503).json({ error: 'Database not connected.' });
   }
 
   try {
-    const items = await MenuItem.find({ isAvailable: true })
+    const raw = await MenuItem.find({ isAvailable: true })
       .sort({ sortOrder: 1, createdAt: 1 })
       .lean();
 
+    const items = raw.map(i => normalise(i));
+
     const grouped = items.reduce(
       (acc, item) => {
-        const cat = item.category;
-        if (acc[cat]) acc[cat].push(item);
+        if (acc[item.category]) acc[item.category].push(item);
         return acc;
       },
       { starters: [], mains: [], desserts: [], drinks: [] }
@@ -34,6 +46,28 @@ router.get('/menu', apiLimiter, async (req, res) => {
   } catch (err) {
     console.error('[menu] Fetch error:', err.message);
     res.status(500).json({ error: 'Could not load menu. Please try again.' });
+  }
+});
+
+// ── GET /api/menu/featured ────────────────────────────────────
+// Returns up to 4 popular items (flat array) — used by Home page.
+router.get('/menu/featured', apiLimiter, async (req, res) => {
+  if (!isReady()) {
+    return res.status(503).json({ error: 'Database not connected.' });
+  }
+
+  try {
+    const raw = await MenuItem.find({ isAvailable: true, isPopular: true })
+      .sort({ sortOrder: 1 })
+      .limit(4)
+      .lean();
+
+    const items = raw.map(i => normalise(i));
+
+    res.json({ success: true, data: items });
+  } catch (err) {
+    console.error('[menu/featured] Fetch error:', err.message);
+    res.status(500).json({ error: 'Could not load featured items.' });
   }
 });
 

@@ -7,37 +7,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { MdRestaurantMenu, MdDeliveryDining, MdFoodBank } from 'react-icons/md';
 import { QRCodeSVG } from 'qrcode.react';
 import { whatsappUrl, WHATSAPP_NUMBER } from '../config/constants';
-
-const featuredItems = [
-  {
-    name: 'Butter Chicken',
-    price: 349,
-    image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=400&h=300&fit=crop',
-    isVeg: false,
-    description: 'Creamy tomato-based curry with tender chicken pieces',
-  },
-  {
-    name: 'Paneer Tikka',
-    price: 279,
-    image: 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=400&h=300&fit=crop',
-    isVeg: true,
-    description: 'Marinated cottage cheese grilled to perfection',
-  },
-  {
-    name: 'Biryani Special',
-    price: 399,
-    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&h=300&fit=crop',
-    isVeg: false,
-    description: 'Fragrant basmati rice layered with aromatic spices',
-  },
-  {
-    name: 'Masala Dosa',
-    price: 149,
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=400&h=300&fit=crop',
-    isVeg: true,
-    description: 'Crispy crepe filled with spiced potato filling',
-  },
-];
+import { useFeaturedItems } from '../hooks/useMenu';
 
 const stats = [
   { icon: <FiShield />,        number: '100%',  label: 'Fresh Ingredients'   },
@@ -49,7 +19,24 @@ const stats = [
 // Testimonials will be loaded from the database in Phase 2.
 // For now we invite real customers to share their experience.
 
+// Skeleton placeholder for a featured card while loading
+const FeaturedSkeleton = () => (
+  <div className="skeleton-card skeleton-card--featured">
+    <div className="skeleton skeleton--image skeleton--image-featured" />
+    <div className="skeleton-card__body">
+      <div className="skeleton skeleton--title" />
+      <div className="skeleton skeleton--text" />
+      <div className="skeleton-card__footer">
+        <div className="skeleton skeleton--price" />
+        <div className="skeleton skeleton--btn" />
+      </div>
+    </div>
+  </div>
+);
+
 const Home = () => {
+  const { featuredItems, loading: featuredLoading } = useFeaturedItems();
+
   return (
     <div className="home">
       {/* Hero Section */}
@@ -246,38 +233,41 @@ const Home = () => {
           </AnimatedSection>
 
           <div className="featured__grid">
-            {featuredItems.map((item, i) => (
-              <AnimatedSection key={i} delay={i * 0.1} direction="up">
-                <motion.div
-                  className="featured__card"
-                  whileHover={{ y: -10 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
-                >
-                  <div className="featured__image">
-                    <img src={item.image} alt={item.name} loading="lazy" />
-                    <span className={`menu-card__badge ${item.isVeg ? 'menu-card__badge--veg' : 'menu-card__badge--nonveg'}`}>
-                      <span className="menu-card__badge-dot"></span>
-                      {item.isVeg ? 'Veg' : 'Non-Veg'}
-                    </span>
-                  </div>
-                  <div className="featured__info">
-                    <h3>{item.name}</h3>
-                    <p>{item.description}</p>
-                    <div className="featured__footer">
-                      <span className="featured__price">₹{item.price}</span>
-                      <a
-                        href={whatsappUrl(`I'd like to order ${item.name}`)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn--sm btn--whatsapp"
-                      >
-                        <FaWhatsapp /> Order
-                      </a>
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatedSection>
-            ))}
+            {featuredLoading
+              ? Array.from({ length: 4 }).map((_, i) => <FeaturedSkeleton key={i} />)
+              : featuredItems.map((item, i) => (
+                  <AnimatedSection key={item._id || item.name} delay={i * 0.1} direction="up">
+                    <motion.div
+                      className="featured__card"
+                      whileHover={{ y: -10 }}
+                      transition={{ type: 'spring', stiffness: 300 }}
+                    >
+                      <div className="featured__image">
+                        <img src={item.image} alt={item.name} loading="lazy" />
+                        <span className={`menu-card__badge ${item.isVeg ? 'menu-card__badge--veg' : 'menu-card__badge--nonveg'}`}>
+                          <span className="menu-card__badge-dot"></span>
+                          {item.isVeg ? 'Veg' : 'Non-Veg'}
+                        </span>
+                      </div>
+                      <div className="featured__info">
+                        <h3>{item.name}</h3>
+                        <p>{item.description}</p>
+                        <div className="featured__footer">
+                          <span className="featured__price">₹{item.price}</span>
+                          <a
+                            href={whatsappUrl(`I'd like to order ${item.name}`)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn--sm btn--whatsapp"
+                          >
+                            <FaWhatsapp /> Order
+                          </a>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </AnimatedSection>
+                ))
+            }
           </div>
 
           <AnimatedSection className="featured__cta">
