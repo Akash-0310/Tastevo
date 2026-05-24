@@ -1,4 +1,4 @@
-# Tastevo — Digital Restaurant Menu
+# Tastevo — Digital Restaurant Menu.
 
 A beautiful, always-up-to-date digital menu that restaurants can share with a tap, scan, or link.
 
