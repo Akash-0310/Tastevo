@@ -2,284 +2,95 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedSection from '../components/AnimatedSection';
 import MenuCard from '../components/MenuCard';
-import { FiSearch, FiFilter } from 'react-icons/fi';
+import { useMenu } from '../hooks/useMenu';
+import { FiSearch, FiFilter, FiAlertTriangle, FiRefreshCw, FiWifi } from 'react-icons/fi';
 import { MdRestaurantMenu } from 'react-icons/md';
 
-const menuData = {
-  starters: [
-    {
-      name: 'Paneer Tikka',
-      price: 279,
-      image: 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Chunky paneer marinated in aromatic spices, grilled in tandoor with bell peppers and onions.',
-      rating: 5,
-      reviews: 324,
-      isPopular: true,
-    },
-    {
-      name: 'Chicken 65',
-      price: 249,
-      image: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400&h=300&fit=crop',
-      isVeg: false,
-      description: 'Spicy, deep-fried chicken bites seasoned with fiery red chillies, curry leaves and ginger.',
-      rating: 4,
-      reviews: 218,
-    },
-    {
-      name: 'Veg Spring Rolls',
-      price: 199,
-      image: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Crispy golden rolls stuffed with julienned vegetables, served with sweet chilli sauce.',
-      rating: 4,
-      reviews: 156,
-    },
-    {
-      name: 'Tandoori Prawns',
-      price: 449,
-      image: 'https://images.unsplash.com/photo-1625943553852-781c6dd46faa?w=400&h=300&fit=crop',
-      isVeg: false,
-      description: 'Jumbo prawns marinated in tandoori masala, chargrilled to smoky perfection.',
-      rating: 5,
-      reviews: 189,
-      isPopular: true,
-    },
-    {
-      name: 'Hara Bhara Kebab',
-      price: 219,
-      image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Spinach and green pea patties with aromatic spices, served with mint chutney.',
-      rating: 4,
-      reviews: 142,
-      isNew: true,
-    },
-    {
-      name: 'Fish Amritsari',
-      price: 349,
-      image: 'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=400&h=300&fit=crop',
-      isVeg: false,
-      description: 'Crispy battered fish fillets spiced with ajwain and amchur, a Punjabi classic.',
-      rating: 5,
-      reviews: 201,
-    },
-  ],
-  mains: [
-    {
-      name: 'Butter Chicken',
-      price: 349,
-      image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=400&h=300&fit=crop',
-      isVeg: false,
-      description: 'Tender chicken pieces simmered in a rich, creamy tomato-butter gravy with aromatic spices.',
-      rating: 5,
-      reviews: 567,
-      isPopular: true,
-    },
-    {
-      name: 'Hyderabadi Biryani',
-      price: 399,
-      image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&h=300&fit=crop',
-      isVeg: false,
-      description: 'Fragrant basmati rice layered with succulent meat, saffron, and secret dum spices.',
-      rating: 5,
-      reviews: 489,
-      isPopular: true,
-    },
-    {
-      name: 'Paneer Butter Masala',
-      price: 299,
-      image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Soft paneer cubes in a velvety cashew-tomato gravy, mildly spiced and aromatic.',
-      rating: 5,
-      reviews: 412,
-      isPopular: true,
-    },
-    {
-      name: 'Masala Dosa',
-      price: 149,
-      image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Golden crispy crepe stuffed with spiced potato masala, served with sambar and chutneys.',
-      rating: 4,
-      reviews: 378,
-    },
-    {
-      name: 'Lamb Rogan Josh',
-      price: 449,
-      image: 'https://images.unsplash.com/photo-1545247181-516773cae754?w=400&h=300&fit=crop',
-      isVeg: false,
-      description: 'Kashmiri-style slow-cooked lamb in a rich gravy of fennel, ginger, and Kashmiri chillies.',
-      rating: 5,
-      reviews: 234,
-      isNew: true,
-    },
-    {
-      name: 'Dal Makhani',
-      price: 249,
-      image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Black lentils slow-cooked overnight with butter and cream, a timeless North Indian classic.',
-      rating: 5,
-      reviews: 356,
-    },
-    {
-      name: 'Chettinad Chicken',
-      price: 379,
-      image: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400&h=300&fit=crop',
-      isVeg: false,
-      description: 'Bold South Indian curry made with freshly ground spices and coconut.',
-      rating: 4,
-      reviews: 198,
-    },
-    {
-      name: 'Veg Thali',
-      price: 329,
-      image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'A complete meal with dal, sabzi, rice, roti, raita, papad, and sweet — a feast on a plate.',
-      rating: 5,
-      reviews: 445,
-      isPopular: true,
-    },
-  ],
-  desserts: [
-    {
-      name: 'Gulab Jamun',
-      price: 129,
-      image: 'https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Soft, golden milk-solid dumplings soaked in rose and cardamom flavoured sugar syrup.',
-      rating: 5,
-      reviews: 312,
-      isPopular: true,
-    },
-    {
-      name: 'Rasmalai',
-      price: 159,
-      image: 'https://images.unsplash.com/photo-1645177628172-a94c1f96e6db?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Delicate cottage cheese patties floating in chilled saffron-cardamom flavoured milk.',
-      rating: 5,
-      reviews: 267,
-    },
-    {
-      name: 'Chocolate Lava Cake',
-      price: 249,
-      image: 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Warm, gooey chocolate cake with a molten centre, served with vanilla ice cream.',
-      rating: 5,
-      reviews: 389,
-      isPopular: true,
-    },
-    {
-      name: 'Kulfi Falooda',
-      price: 179,
-      image: 'https://images.unsplash.com/photo-1488900128323-21503983a07e?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Traditional Indian ice cream with falooda sev, rose syrup, and basil seeds.',
-      rating: 4,
-      reviews: 198,
-      isNew: true,
-    },
-  ],
-  drinks: [
-    {
-      name: 'Mango Lassi',
-      price: 129,
-      image: 'https://images.unsplash.com/photo-1527661591475-527312dd65f5?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Creamy yogurt blended with fresh Alphonso mango pulp and a hint of cardamom.',
-      rating: 5,
-      reviews: 423,
-      isPopular: true,
-    },
-    {
-      name: 'Masala Chai',
-      price: 79,
-      image: 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Aromatic Indian tea brewed with ginger, cardamom, cinnamon, and cloves.',
-      rating: 5,
-      reviews: 534,
-      isPopular: true,
-    },
-    {
-      name: 'Fresh Lime Soda',
-      price: 99,
-      image: 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Refreshing lime juice mixed with sparkling soda — sweet, salty, or mixed.',
-      rating: 4,
-      reviews: 278,
-    },
-    {
-      name: 'Cold Coffee',
-      price: 149,
-      image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Thick, creamy iced coffee blended with milk and a scoop of ice cream on top.',
-      rating: 4,
-      reviews: 312,
-    },
-    {
-      name: 'Virgin Mojito',
-      price: 169,
-      image: 'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=400&h=300&fit=crop',
-      isVeg: true,
-      description: 'Refreshing mix of fresh mint, lime, sugar, and sparkling water over crushed ice.',
-      rating: 4,
-      reviews: 256,
-      isNew: true,
-    },
-  ],
-};
-
 const categories = [
-  { key: 'all', label: 'All Items', icon: '🍽️' },
-  { key: 'starters', label: 'Starters', icon: '🥗' },
-  { key: 'mains', label: 'Main Course', icon: '🍛' },
-  { key: 'desserts', label: 'Desserts', icon: '🍮' },
-  { key: 'drinks', label: 'Beverages', icon: '🥤' },
+  { key: 'all',      label: 'All Items',    icon: '🍽️' },
+  { key: 'starters', label: 'Starters',     icon: '🥗' },
+  { key: 'mains',    label: 'Main Course',  icon: '🍛' },
+  { key: 'desserts', label: 'Desserts',     icon: '🍮' },
+  { key: 'drinks',   label: 'Beverages',    icon: '🥤' },
 ];
 
-const Menu = () => {
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [search, setSearch] = useState('');
-  const [dietFilter, setDietFilter] = useState('all');
+// ── Skeleton card shown while loading ────────────────────────
+const SkeletonCard = () => (
+  <div className="skeleton-card">
+    <div className="skeleton skeleton--image" />
+    <div className="skeleton-card__body">
+      <div className="skeleton skeleton--title" />
+      <div className="skeleton skeleton--text" />
+      <div className="skeleton skeleton--text skeleton--text-short" />
+      <div className="skeleton-card__footer">
+        <div className="skeleton skeleton--price" />
+        <div className="skeleton skeleton--btn" />
+      </div>
+    </div>
+  </div>
+);
 
+// ── Error / offline banner ────────────────────────────────────
+const ErrorBanner = ({ message, isFallback, onRetry }) => (
+  <div className={`menu-alert ${isFallback ? 'menu-alert--warn' : 'menu-alert--error'}`}>
+    <div className="menu-alert__icon">
+      {isFallback ? <FiWifi /> : <FiAlertTriangle />}
+    </div>
+    <div className="menu-alert__body">
+      <p className="menu-alert__title">
+        {isFallback
+          ? 'Showing saved menu — live data unavailable'
+          : 'Could not load the menu'}
+      </p>
+      <p className="menu-alert__msg">
+        {isFallback
+          ? 'Prices and availability may differ. Check back when you\'re online.'
+          : message}
+      </p>
+    </div>
+    <button className="menu-alert__retry" onClick={onRetry}>
+      <FiRefreshCw /> Retry
+    </button>
+  </div>
+);
+
+const Menu = () => {
+  const { menuData, loading, error, isFallback, refetch } = useMenu();
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [search, setSearch]                 = useState('');
+  const [dietFilter, setDietFilter]         = useState('all');
+
+  // ── Filtering ─────────────────────────────────────────────
   const getAllItems = () => {
-    const all = [];
-    Object.entries(menuData).forEach(([category, items]) => {
-      items.forEach(item => all.push({ ...item, category }));
-    });
-    return all;
+    if (!menuData) return [];
+    return Object.entries(menuData).flatMap(([category, items]) =>
+      items.map(item => ({ ...item, category }))
+    );
   };
 
   const getFilteredItems = () => {
+    if (!menuData) return [];
+
     let items = activeCategory === 'all'
       ? getAllItems()
-      : menuData[activeCategory].map(item => ({ ...item, category: activeCategory }));
+      : (menuData[activeCategory] || []).map(item => ({ ...item, category: activeCategory }));
 
-    if (search) {
+    if (search.trim()) {
+      const q = search.toLowerCase();
       items = items.filter(item =>
-        item.name.toLowerCase().includes(search.toLowerCase()) ||
-        item.description.toLowerCase().includes(search.toLowerCase())
+        item.name.toLowerCase().includes(q) ||
+        item.description.toLowerCase().includes(q)
       );
     }
 
-    if (dietFilter === 'veg') {
-      items = items.filter(item => item.isVeg);
-    } else if (dietFilter === 'nonveg') {
-      items = items.filter(item => !item.isVeg);
-    }
+    if (dietFilter === 'veg')    items = items.filter(item =>  item.isVeg);
+    if (dietFilter === 'nonveg') items = items.filter(item => !item.isVeg);
 
     return items;
   };
 
-  const filteredItems = getFilteredItems();
+  const filteredItems  = getFilteredItems();
+  const skeletonCount  = 8;
 
   return (
     <div className="menu-page">
@@ -300,7 +111,10 @@ const Menu = () => {
           >
             <span className="section__badge">Discover Deliciousness</span>
             <h1>Our Menu</h1>
-            <p>Explore our diverse collection of dishes crafted with passion, fresh ingredients, and time-honoured recipes from across India.</p>
+            <p>
+              Explore our diverse collection of dishes crafted with passion, fresh
+              ingredients, and time-honoured recipes from across India.
+            </p>
           </motion.div>
         </div>
       </section>
@@ -315,12 +129,12 @@ const Menu = () => {
                 type="text"
                 placeholder="Search dishes..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={e => setSearch(e.target.value)}
               />
             </div>
             <div className="menu-filters__diet">
               <FiFilter />
-              <select value={dietFilter} onChange={(e) => setDietFilter(e.target.value)}>
+              <select value={dietFilter} onChange={e => setDietFilter(e.target.value)}>
                 <option value="all">All</option>
                 <option value="veg">Veg Only</option>
                 <option value="nonveg">Non-Veg Only</option>
@@ -345,44 +159,65 @@ const Menu = () => {
         </div>
       </section>
 
+      {/* Alert banner (offline / error) */}
+      {(error || isFallback) && (
+        <div className="container">
+          <ErrorBanner message={error} isFallback={isFallback} onRetry={refetch} />
+        </div>
+      )}
+
       {/* Menu Items */}
       <section className="menu-items section">
         <div className="container">
-          {activeCategory !== 'all' && (
-            <AnimatedSection className="section__header">
-              <h2 className="section__title">
-                {categories.find(c => c.key === activeCategory)?.icon}{' '}
-                {categories.find(c => c.key === activeCategory)?.label}
-              </h2>
-              <p className="menu-items__count">{filteredItems.length} items found</p>
-            </AnimatedSection>
+          {/* Loading skeletons */}
+          {loading && (
+            <div className="menu-items__grid">
+              {Array.from({ length: skeletonCount }).map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
           )}
 
-          <AnimatePresence mode="wait">
-            {filteredItems.length > 0 ? (
-              <motion.div
-                key={activeCategory + dietFilter + search}
-                className="menu-items__grid"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                {filteredItems.map((item, i) => (
-                  <MenuCard key={item.name + item.category} item={item} index={i} />
-                ))}
-              </motion.div>
-            ) : (
-              <motion.div
-                className="menu-items__empty"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <MdRestaurantMenu className="menu-items__empty-icon" />
-                <h3>No items found</h3>
-                <p>Try a different search or filter combination.</p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Loaded content */}
+          {!loading && (
+            <>
+              {activeCategory !== 'all' && (
+                <AnimatedSection className="section__header">
+                  <h2 className="section__title">
+                    {categories.find(c => c.key === activeCategory)?.icon}{' '}
+                    {categories.find(c => c.key === activeCategory)?.label}
+                  </h2>
+                  <p className="menu-items__count">{filteredItems.length} items found</p>
+                </AnimatedSection>
+              )}
+
+              <AnimatePresence mode="wait">
+                {filteredItems.length > 0 ? (
+                  <motion.div
+                    key={activeCategory + dietFilter + search}
+                    className="menu-items__grid"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    {filteredItems.map((item, i) => (
+                      <MenuCard key={`${item.name}-${item.category}`} item={item} index={i} />
+                    ))}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    className="menu-items__empty"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  >
+                    <MdRestaurantMenu className="menu-items__empty-icon" />
+                    <h3>No items found</h3>
+                    <p>Try a different search or filter combination.</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
+          )}
         </div>
       </section>
     </div>
