@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import AnimatedSection from '../components/AnimatedSection';
-import { FiArrowRight, FiDownload, FiBookOpen, FiVideo, FiFileText, FiExternalLink } from 'react-icons/fi';
+import { FiArrowRight, FiDownload, FiBookOpen, FiVideo, FiFileText, FiExternalLink, FiZap, FiThumbsUp, FiMail } from 'react-icons/fi';
 import { MdRestaurantMenu, MdEco, MdFoodBank } from 'react-icons/md';
 import { QRCodeSVG } from 'qrcode.react';
 
@@ -83,7 +83,24 @@ const videos = [
   },
 ];
 
+const quickTips = [
+  { icon: '🧄', tip: 'Bloom your spices in hot oil for 30 seconds before adding other ingredients — this releases essential oils and deepens flavour.' },
+  { icon: '🧅', tip: 'Salt your onions while frying. The salt draws out moisture and speeds caramelisation, giving a richer, sweeter base.' },
+  { icon: '🫙', tip: 'Add a pinch of sugar to acidic tomato-based gravies to balance the sourness without overpowering the dish.' },
+  { icon: '🍋', tip: 'Finish dishes with a squeeze of lemon right before serving — it brightens all the flavours without adding sourness to the gravy.' },
+  { icon: '🌿', tip: 'Add fresh coriander and mint after the heat is off. Heat destroys their volatile oils — add them cold for maximum aroma.' },
+  { icon: '🥘', tip: 'Dum cooking (sealing and slow-cooking on low heat) is the secret to tender meats and fragrant biryanis. A tight-fitting lid is essential.' },
+];
+
 const Resources = () => {
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterDone, setNewsletterDone]   = useState(false);
+
+  const handleNewsletter = (e) => {
+    e.preventDefault();
+    if (newsletterEmail) setNewsletterDone(true);
+  };
+
   return (
     <div className="resources-page">
       {/* Hero */}
@@ -143,6 +160,77 @@ const Resources = () => {
                       Read More <FiArrowRight />
                     </span>
                   </div>
+                </motion.div>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Recipe of the Week */}
+      <section className="resources-recipe section">
+        <div className="container">
+          <AnimatedSection>
+            <div className="resources-recipe__card">
+              <div className="resources-recipe__image">
+                <img
+                  src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=700&h=500&fit=crop"
+                  alt="Hyderabadi Biryani"
+                  loading="lazy"
+                />
+                <span className="resources-recipe__badge">
+                  <FiZap /> Recipe of the Week
+                </span>
+              </div>
+              <div className="resources-recipe__content">
+                <span className="section__badge">Chef's Pick</span>
+                <h2>Hyderabadi Dum Biryani</h2>
+                <p>
+                  A fragrant, layered masterpiece — long-grain Basmati rice slow-cooked over
+                  marinated meat with saffron, fried onions, and whole spices. Our Head Chef
+                  Arjun shares the technique that makes our biryani Bangalore's most talked-about.
+                </p>
+                <div className="resources-recipe__meta">
+                  <span><strong>Prep:</strong> 40 min</span>
+                  <span><strong>Cook:</strong> 1 hr 20 min</span>
+                  <span><strong>Serves:</strong> 4–6</span>
+                  <span><strong>Level:</strong> Intermediate</span>
+                </div>
+                <div className="resources-recipe__actions">
+                  <a
+                    href="https://youtube.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn--primary"
+                  >
+                    <FiVideo /> Watch Recipe
+                  </a>
+                  <Link to="/menu" className="btn btn--outline">
+                    Order Biryani <FiArrowRight />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Quick Cooking Tips */}
+      <section className="resources-tips section">
+        <div className="container">
+          <AnimatedSection className="section__header">
+            <span className="section__badge"><FiThumbsUp /> Pro Tips</span>
+            <h2 className="section__title">Quick Cooking Tips from Our Chefs</h2>
+            <p className="section__subtitle">
+              Small techniques that make a big difference. Master these and elevate every dish you cook.
+            </p>
+          </AnimatedSection>
+          <div className="resources-tips__grid">
+            {quickTips.map((item, i) => (
+              <AnimatedSection key={i} delay={i * 0.08}>
+                <motion.div className="resources-tip__card" whileHover={{ y: -5 }}>
+                  <span className="resources-tip__emoji">{item.icon}</span>
+                  <p>{item.tip}</p>
                 </motion.div>
               </AnimatedSection>
             ))}
@@ -263,6 +351,42 @@ const Resources = () => {
               </div>
             </AnimatedSection>
           </div>
+        </div>
+      </section>
+
+      {/* Newsletter CTA */}
+      <section className="resources-newsletter section">
+        <div className="container">
+          <AnimatedSection className="resources-newsletter__card">
+            <div className="resources-newsletter__text">
+              <FiMail className="resources-newsletter__icon" />
+              <div>
+                <h2>Get Weekly Food Inspo in Your Inbox</h2>
+                <p>
+                  New recipes, chef tips, seasonal specials, and exclusive discounts —
+                  delivered every Thursday. Join 8,000+ food lovers who read our newsletter.
+                </p>
+              </div>
+            </div>
+            {newsletterDone ? (
+              <div className="resources-newsletter__success">
+                <FiThumbsUp /> You're subscribed! Check your inbox on Thursday.
+              </div>
+            ) : (
+              <form className="resources-newsletter__form" onSubmit={handleNewsletter}>
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  required
+                />
+                <button type="submit" className="btn btn--primary">
+                  Subscribe Free
+                </button>
+              </form>
+            )}
+          </AnimatedSection>
         </div>
       </section>
     </div>
