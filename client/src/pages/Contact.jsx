@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import AnimatedSection from '../components/AnimatedSection';
-import { FiMapPin, FiPhone, FiMail, FiClock, FiSend, FiCheck, FiAlertCircle } from 'react-icons/fi';
+import { FiMapPin, FiPhone, FiMail, FiClock, FiSend, FiCheck, FiAlertCircle, FiCalendar, FiHelpCircle, FiShoppingCart, FiBriefcase } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { whatsappUrl, BUSINESS_PHONE, BUSINESS_EMAIL, BUSINESS_ADDRESS, BUSINESS_HOURS } from '../config/constants';
 
 const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+
+const reasons = [
+  { icon: <FiShoppingCart />, title: 'Orders & Delivery', desc: 'Track your order, report an issue, or request a refund.' },
+  { icon: <FiCalendar />,     title: 'Reservations',     desc: 'Book a table, plan a private dining event, or modify a booking.' },
+  { icon: <FiBriefcase />,    title: 'Catering & Events', desc: 'Get a custom quote for corporate lunches, parties, or weddings.' },
+  { icon: <FiHelpCircle />,   title: 'General Queries',  desc: 'Menu details, allergen info, or anything else on your mind.' },
+];
+
+const hours = [
+  { day: 'Monday – Friday',  open: '11:00 AM',  close: '11:00 PM', peak: '12–2 PM, 7–10 PM' },
+  { day: 'Saturday',         open: '10:00 AM',  close: '11:30 PM', peak: '1–3 PM, 7–10:30 PM' },
+  { day: 'Sunday',           open: '10:00 AM',  close: '10:30 PM', peak: '1–4 PM, 7–10 PM' },
+];
 
 const Contact = () => {
   const [formData,     setFormData]     = useState({ name: '', email: '', phone: '', message: '' });
@@ -132,6 +145,54 @@ const Contact = () => {
               </AnimatedSection>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Reasons to Contact */}
+      <section className="contact-reasons section">
+        <div className="container">
+          <AnimatedSection className="section__header">
+            <span className="section__badge">How Can We Help?</span>
+            <h2 className="section__title">Reach Out for Anything</h2>
+          </AnimatedSection>
+          <div className="contact-reasons__grid">
+            {reasons.map((r, i) => (
+              <AnimatedSection key={i} delay={i * 0.1}>
+                <motion.div className="contact-reasons__card" whileHover={{ y: -6 }}>
+                  <div className="contact-reasons__icon">{r.icon}</div>
+                  <h3>{r.title}</h3>
+                  <p>{r.desc}</p>
+                </motion.div>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Hours Breakdown */}
+      <section className="contact-hours section">
+        <div className="container">
+          <AnimatedSection>
+            <div className="contact-hours__card">
+              <div className="contact-hours__header">
+                <FiClock />
+                <h2>Operating Hours</h2>
+              </div>
+              <div className="contact-hours__table">
+                {hours.map((h, i) => (
+                  <div key={i} className="contact-hours__row">
+                    <span className="contact-hours__day">{h.day}</span>
+                    <span className="contact-hours__time">{h.open} – {h.close}</span>
+                    <span className="contact-hours__peak">Peak: {h.peak}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="contact-hours__note">
+                WhatsApp orders and support available during all operating hours.
+                For urgent issues outside hours, message us — we check periodically.
+              </p>
+            </div>
+          </AnimatedSection>
         </div>
       </section>
 
