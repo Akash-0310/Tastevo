@@ -9,6 +9,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
 import Resources from './pages/Resources';
+import Privacy from './pages/Privacy';
 import NotFound from './pages/NotFound';
 
 function ScrollToTop() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/resources" element={<Resources />} />
+          <Route path="/privacy"   element={<Privacy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
