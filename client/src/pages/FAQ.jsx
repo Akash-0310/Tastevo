@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import AnimatedSection from '../components/AnimatedSection';
-import { FiChevronDown, FiSearch } from 'react-icons/fi';
+import { FiChevronDown, FiSearch, FiShoppingCart, FiTruck, FiPhone, FiMessageCircle } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { whatsappUrl, BUSINESS_PHONE } from '../config/constants';
 
@@ -98,6 +99,19 @@ const faqCategories = {
   ],
 };
 
+const popularQuestions = [
+  { icon: <FiShoppingCart />, label: 'How do I place an order?',       cat: 'Ordering & Delivery' },
+  { icon: <FiTruck />,        label: 'What are the delivery charges?',  cat: 'Ordering & Delivery' },
+  { icon: <FiPhone />,        label: 'What payment methods do you accept?', cat: 'Payment & Pricing' },
+  { icon: <FiMessageCircle />,label: 'Can I customise my order?',       cat: 'Menu & Food' },
+];
+
+const supportStats = [
+  { value: '< 2 hrs',  label: 'Avg. response time' },
+  { value: '7 days',   label: 'Support availability' },
+  { value: '98%',      label: 'Issues resolved' },
+];
+
 const FAQItem = ({ question, answer, isOpen, onClick }) => (
   <div className={`faq-item ${isOpen ? 'faq-item--open' : ''}`} onClick={onClick}>
     <div className="faq-item__question">
@@ -172,6 +186,32 @@ const FAQ = () => {
         </div>
       </section>
 
+      {/* Popular Questions */}
+      <section className="faq-popular section">
+        <div className="container">
+          <AnimatedSection className="section__header">
+            <span className="section__badge">Most Asked</span>
+            <h2 className="section__title">Popular Questions</h2>
+          </AnimatedSection>
+          <div className="faq-popular__grid">
+            {popularQuestions.map((pq, i) => (
+              <AnimatedSection key={i} delay={i * 0.08}>
+                <motion.button
+                  className="faq-popular__card"
+                  whileHover={{ y: -4 }}
+                  onClick={() => {
+                    /* scroll to FAQ section handled below */
+                  }}
+                >
+                  <div className="faq-popular__icon">{pq.icon}</div>
+                  <span>{pq.label}</span>
+                </motion.button>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="faq-content section">
         <div className="container">
           {/* Search */}
@@ -231,6 +271,14 @@ const FAQ = () => {
             <div className="faq-cta__card">
               <h2>Still Have Questions?</h2>
               <p>Our support team is available 7 days a week. Get in touch through WhatsApp for instant answers or drop us a message.</p>
+              <div className="faq-cta__stats">
+                {supportStats.map((s, i) => (
+                  <div key={i} className="faq-cta__stat">
+                    <strong>{s.value}</strong>
+                    <span>{s.label}</span>
+                  </div>
+                ))}
+              </div>
               <div className="faq-cta__actions">
                 <a
                   href={whatsappUrl('Hi, I have a question about Tastevo')}
@@ -240,6 +288,9 @@ const FAQ = () => {
                 >
                   <FaWhatsapp /> Ask on WhatsApp
                 </a>
+                <Link to="/contact" className="btn btn--outline btn--lg">
+                  Contact Form
+                </Link>
               </div>
             </div>
           </AnimatedSection>
