@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import AnimatedSection from '../components/AnimatedSection';
-import { FiHeart, FiAward, FiUsers, FiTarget, FiStar, FiCheck } from 'react-icons/fi';
+import { FiHeart, FiAward, FiUsers, FiTarget, FiStar, FiCheck, FiArrowRight, FiGlobe, FiPackage } from 'react-icons/fi';
 import { MdEco, MdDeliveryDining } from 'react-icons/md';
 
 const team = [
@@ -28,6 +29,31 @@ const team = [
     role: 'Operations Head',
     image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop',
     bio: 'Meera ensures every order reaches you perfectly — from kitchen to doorstep, she orchestrates the magic behind the scenes.',
+  },
+];
+
+const stats = [
+  { value: '50K+',  label: 'Orders Delivered',   icon: <MdDeliveryDining /> },
+  { value: '200+',  label: 'Menu Items',          icon: <FiPackage /> },
+  { value: '4.8★',  label: 'Average Rating',      icon: <FiStar /> },
+  { value: '5+',    label: 'Years of Flavour',    icon: <FiAward /> },
+];
+
+const awards = [
+  {
+    year: '2024',
+    title: 'Best Cloud Kitchen — Bangalore Food Awards',
+    body: 'Voted the most loved cloud kitchen in Bangalore for consistent quality, innovation, and service by over 10,000 diners.',
+  },
+  {
+    year: '2023',
+    title: 'Sustainability Pioneer — Green Restaurant Initiative',
+    body: 'Recognised for our zero-waste kitchen programme, 100% eco-friendly packaging, and farm-to-table sourcing commitment.',
+  },
+  {
+    year: '2022',
+    title: 'Digital Dining Innovator — TechEats India',
+    body: 'Featured for pioneering QR-code menu and WhatsApp-first ordering in the Indian cloud kitchen space.',
   },
 ];
 
@@ -85,6 +111,21 @@ const About = () => {
             <h1>About Tastevo</h1>
             <p>From a small cloud kitchen to Bangalore's most loved restaurant — discover the passion, people, and purpose behind every plate.</p>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Stats Banner */}
+      <section className="about-stats section">
+        <div className="container">
+          <div className="about-stats__grid">
+            {stats.map((s, i) => (
+              <AnimatedSection key={i} delay={i * 0.1} className="about-stats__card">
+                <div className="about-stats__icon">{s.icon}</div>
+                <strong className="about-stats__value">{s.value}</strong>
+                <span className="about-stats__label">{s.label}</span>
+              </AnimatedSection>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -182,6 +223,31 @@ const About = () => {
         </div>
       </section>
 
+      {/* Awards & Recognition */}
+      <section className="about-awards section">
+        <div className="container">
+          <AnimatedSection className="section__header">
+            <span className="section__badge">Recognition</span>
+            <h2 className="section__title">Awards & Achievements</h2>
+            <p className="section__subtitle">
+              Humbled by the recognition we've received from the culinary community and our customers.
+            </p>
+          </AnimatedSection>
+          <div className="about-awards__grid">
+            {awards.map((a, i) => (
+              <AnimatedSection key={i} delay={i * 0.1}>
+                <motion.div className="about-awards__card" whileHover={{ y: -6 }}>
+                  <div className="about-awards__year">{a.year}</div>
+                  <FiAward className="about-awards__trophy" />
+                  <h3>{a.title}</h3>
+                  <p>{a.body}</p>
+                </motion.div>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Timeline */}
       <section className="about-timeline section">
         <div className="container">
@@ -267,6 +333,19 @@ const About = () => {
                 <strong>FSSAI</strong>
                 <span>Certified Kitchen</span>
               </div>
+              <div>
+                <FiGlobe />
+                <strong>1%</strong>
+                <span>Meals Pledge</span>
+              </div>
+            </div>
+            <div className="about-cta__actions">
+              <Link to="/menu" className="btn btn--primary btn--lg">
+                Explore Our Menu <FiArrowRight />
+              </Link>
+              <Link to="/contact" className="btn btn--outline btn--lg">
+                Get in Touch
+              </Link>
             </div>
           </AnimatedSection>
         </div>

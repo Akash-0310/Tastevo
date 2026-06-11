@@ -1357,6 +1357,98 @@ img {
 }
 
 /* ===== ABOUT PAGE ===== */
+.about-stats__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+@media (max-width: 900px) { .about-stats__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .about-stats__grid { grid-template-columns: 1fr 1fr; } }
+.about-stats__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.75rem 1rem;
+  gap: 0.5rem;
+  transition: box-shadow 0.2s;
+}
+.about-stats__card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+.about-stats__icon {
+  font-size: 1.75rem;
+  color: var(--primary);
+  display: flex;
+}
+.about-stats__value {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+}
+.about-stats__label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.about-awards__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+@media (max-width: 768px) { .about-awards__grid { grid-template-columns: 1fr; } }
+.about-awards__card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.75rem;
+  position: relative;
+  overflow: hidden;
+}
+.about-awards__year {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+}
+.about-awards__trophy {
+  font-size: 1.8rem;
+  color: #f59e0b;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+.about-awards__card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+  line-height: 1.4;
+}
+.about-awards__card p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.about-cta__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+.about-cta__actions .btn--outline {
+  border-color: rgba(255,255,255,0.5);
+  color: #fff;
+}
+.about-cta__actions .btn--outline:hover {
+  background: rgba(255,255,255,0.15);
+}
+
 .about-story__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
