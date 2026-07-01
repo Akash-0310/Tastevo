@@ -32,6 +32,4 @@ The menu is designed to look as appetizing as the food it represents — with ph
 - **Contact flow** for reservations, inquiries, and feedback.
 - **Responsive, appetite-inducing design** that reads cleanly on every screen.
 
-## The idea in one line
 
-Tastevo is the simplest way for a restaurant to put its menu online and keep it looking delicious — forever.
