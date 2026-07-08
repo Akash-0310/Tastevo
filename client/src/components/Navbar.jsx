@@ -39,16 +39,20 @@ const Navbar = () => {
           </span>
         </Link>
 
-        <div className={`navbar__links ${isOpen ? 'navbar__links--open' : ''}`}>
-          {navLinks.map(link => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`navbar__link ${location.pathname === link.path ? 'navbar__link--active' : ''}`}
-            >
-              {link.label}
-            </Link>
-          ))}
+        <div id="navbar-links" className={`navbar__links ${isOpen ? 'navbar__links--open' : ''}`}>
+          {navLinks.map(link => {
+            const isActive = location.pathname === link.path;
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`navbar__link ${isActive ? 'navbar__link--active' : ''}`}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
           <Link to="/menu" className="btn btn--primary navbar__cta">
             Order Now
           </Link>
@@ -65,6 +69,8 @@ const Navbar = () => {
             className="navbar__hamburger"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
+            aria-expanded={isOpen}
+            aria-controls="navbar-links"
           >
             {isOpen ? <FiX /> : <FiMenu />}
           </button>
