@@ -12,7 +12,11 @@ export const BUSINESS_HOURS   = import.meta.env.VITE_BUSINESS_HOURS   || 'Mon-Su
 
 /**
  * Build a WhatsApp deep-link.
+ * wa.me only accepts a bare digit string, so strip any spaces, plus signs,
+ * or dashes that may come from the configured number.
  * @param {string} message - Pre-filled chat message
  */
-export const whatsappUrl = (message = 'Hi! I would like to place an order from Tastevo.') =>
-  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+export const whatsappUrl = (message = 'Hi! I would like to place an order from Tastevo.') => {
+  const number = WHATSAPP_NUMBER.replace(/\D/g, '');
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+};
