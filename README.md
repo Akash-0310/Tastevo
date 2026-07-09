@@ -1,7 +1,5 @@
 # Tastevo — Digital Restaurant Menu.
 
-A beautiful, always-up-to-date digital menu that restaurants can share with a tap, scan, or link.
-
 ## What it is
 
 Tastevo replaces the printed menu, the PDF stuck to a laminated card, and the out-of-date website page with a single living menu that diners can open on their own phones. Restaurants update dishes, prices, and availability in one place; guests see the changes instantly.
