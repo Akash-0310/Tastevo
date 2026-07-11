@@ -58,6 +58,7 @@ const MenuCard = ({ item, index }) => {
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn--whatsapp menu-card__order"
+          aria-label={`Order ${item.name} via WhatsApp`}
         >
           <FaWhatsapp /> Order via WhatsApp
         </a>
