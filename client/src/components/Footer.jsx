@@ -95,11 +95,11 @@ const Footer = () => {
             </div>
             <div className="footer__contact-item">
               <FiPhone />
-              <span>{BUSINESS_PHONE}</span>
+              <a href={`tel:${BUSINESS_PHONE.replace(/\s+/g, '')}`}>{BUSINESS_PHONE}</a>
             </div>
             <div className="footer__contact-item">
               <FiMail />
-              <span>{BUSINESS_EMAIL}</span>
+              <a href={`mailto:${BUSINESS_EMAIL}`}>{BUSINESS_EMAIL}</a>
             </div>
             <div className="footer__contact-item">
               <FiClock />
