@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MdRestaurantMenu } from 'react-icons/md';
 import { FiArrowLeft, FiHome } from 'react-icons/fi';
 
 const NotFound = () => {
+  useEffect(() => {
+    const previous = document.title;
+    document.title = '404 — Page Not Found | Tastevo';
+    return () => { document.title = previous; };
+  }, []);
+
   return (
     <div className="not-found">
       <div className="container not-found__container">
