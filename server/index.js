@@ -91,9 +91,20 @@ if (process.env.NODE_ENV === 'production') {
 // ── Connect DB then start server ──────────────────────────────
 const startServer = async () => {
   await connect();
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`[server] Running on port ${PORT} [${process.env.NODE_ENV}]`);
   });
+
+  // Graceful shutdown: stop accepting connections and exit cleanly so
+  // orchestrators (Docker, PM2, etc.) don't have to force-kill the process.
+  const shutdown = (signal) => {
+    console.log(`[server] ${signal} received — shutting down gracefully.`);
+    server.close(() => {
+      console.log('[server] Closed remaining connections. Bye.');
+      process.exit(0);
+    });
+  };
+  ['SIGTERM', 'SIGINT'].forEach(sig => process.on(sig, () => shutdown(sig)));
 };
 
 startServer().catch(err => {
