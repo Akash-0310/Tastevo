@@ -4,7 +4,7 @@ const helmet  = require('helmet');
 const path    = require('path');
 require('dotenv').config();
 
-const { connect } = require('./db');
+const { connect, isReady } = require('./db');
 
 // ── Startup env check ────────────────────────────────────────
 const REQUIRED_ENV = ['PORT', 'NODE_ENV'];
@@ -51,6 +51,16 @@ app.options('*', cors(corsOptions));
 
 // ── Body parsing ─────────────────────────────────────────────
 app.use(express.json({ limit: '10kb' }));
+
+// ── Health check ─────────────────────────────────────────────
+// Lightweight probe for uptime monitors and deployment health checks.
+app.get('/api/health', (_req, res) => {
+  res.json({
+    status: 'ok',
+    uptime: process.uptime(),
+    db: isReady() ? 'connected' : 'disconnected',
+  });
+});
 
 // ── API routes ───────────────────────────────────────────────
 app.use('/api', require('./routes/contact.route'));
