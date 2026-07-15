@@ -31,7 +31,9 @@ router.post(
       .trim().notEmpty().withMessage('Time is required.')
       .matches(/^([01]?\d|2[0-3]):[0-5]\d$/).withMessage('Invalid time format.'),
     body('guests')
-      .notEmpty().withMessage('Number of guests is required.'),
+      .notEmpty().withMessage('Number of guests is required.')
+      .bail()
+      .isInt({ min: 1, max: 50 }).withMessage('Guests must be a number between 1 and 50.'),
     body('notes')
       .optional({ checkFalsy: true })
       .trim().isLength({ max: 500 }).withMessage('Notes too long.')
