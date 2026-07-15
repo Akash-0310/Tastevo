@@ -26,7 +26,16 @@ router.post(
       .matches(/^[\+\-\s\(\)\d]{7,20}$/).withMessage('Invalid phone number.'),
     body('date')
       .trim().notEmpty().withMessage('Date is required.')
-      .isDate({ format: 'YYYY-MM-DD' }).withMessage('Invalid date.'),
+      .isDate({ format: 'YYYY-MM-DD' }).withMessage('Invalid date.')
+      .bail()
+      .custom((value) => {
+        // YYYY-MM-DD strings compare chronologically, so a plain string
+        // comparison against today's local date rejects past bookings.
+        const now = new Date();
+        const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        if (value < today) throw new Error('Reservation date cannot be in the past.');
+        return true;
+      }),
     body('time')
       .trim().notEmpty().withMessage('Time is required.')
       .matches(/^([01]?\d|2[0-3]):[0-5]\d$/).withMessage('Invalid time format.'),
