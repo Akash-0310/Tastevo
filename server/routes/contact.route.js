@@ -1,21 +1,13 @@
 const router  = require('express').Router();
-const { body, validationResult } = require('express-validator');
+const { body }         = require('express-validator');
 const { formLimiter }  = require('../middleware/rateLimiter');
+const handleValidation = require('../middleware/validate');
 const Contact          = require('../models/Contact');
 const { isReady }      = require('../db');
 const {
   sendContactNotification,
   sendContactAutoReply,
 } = require('../services/email.service');
-
-const validate = (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(422).json({ error: errors.array()[0].msg });
-    return false;
-  }
-  return true;
-};
 
 router.post(
   '/contact',
@@ -38,9 +30,8 @@ router.post(
       .withMessage('Message must be between 10 and 1000 characters.')
       .escape(),
   ],
+  handleValidation,
   async (req, res) => {
-    if (!validate(req, res)) return;
-
     const { name, email, phone, message } = req.body;
 
     // ── Persist to DB ──────────────────────────────────────────

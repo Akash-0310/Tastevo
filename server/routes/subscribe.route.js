@@ -1,17 +1,9 @@
 const router  = require('express').Router();
-const { body, validationResult } = require('express-validator');
+const { body }       = require('express-validator');
 const { apiLimiter } = require('../middleware/rateLimiter');
+const handleValidation = require('../middleware/validate');
 const Subscriber     = require('../models/Subscriber');
 const { isReady }    = require('../db');
-
-const validate = (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(422).json({ error: errors.array()[0].msg });
-    return false;
-  }
-  return true;
-};
 
 router.post(
   '/subscribe',
@@ -21,9 +13,8 @@ router.post(
       .trim().isEmail().withMessage('A valid email address is required.')
       .normalizeEmail(),
   ],
+  handleValidation,
   async (req, res) => {
-    if (!validate(req, res)) return;
-
     const { email } = req.body;
 
     if (isReady()) {
