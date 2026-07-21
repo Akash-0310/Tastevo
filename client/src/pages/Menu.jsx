@@ -312,17 +312,22 @@ const Menu = () => {
         <div className="container">
           <div className="menu-filters__bar">
             <div className="menu-filters__search">
-              <FiSearch />
+              <FiSearch aria-hidden="true" />
               <input
                 type="text"
                 placeholder="Search dishes..."
+                aria-label="Search dishes"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             <div className="menu-filters__diet">
-              <FiFilter />
-              <select value={dietFilter} onChange={(e) => setDietFilter(e.target.value)}>
+              <FiFilter aria-hidden="true" />
+              <select
+                aria-label="Filter by dietary preference"
+                value={dietFilter}
+                onChange={(e) => setDietFilter(e.target.value)}
+              >
                 <option value="all">All</option>
                 <option value="veg">Veg Only</option>
                 <option value="nonveg">Non-Veg Only</option>
