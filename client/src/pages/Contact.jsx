@@ -4,6 +4,7 @@ import AnimatedSection from '../components/AnimatedSection';
 import { FiMapPin, FiPhone, FiMail, FiClock, FiSend, FiCheck, FiAlertCircle, FiCalendar, FiHelpCircle, FiShoppingCart, FiBriefcase } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { whatsappUrl, BUSINESS_PHONE, BUSINESS_EMAIL, BUSINESS_ADDRESS, BUSINESS_HOURS } from '../config/constants';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
@@ -21,6 +22,8 @@ const hours = [
 ];
 
 const Contact = () => {
+  useDocumentTitle('Contact Us');
+
   const [formData,     setFormData]     = useState({ name: '', email: '', phone: '', message: '' });
   const [reserveData,  setReserveData]  = useState({ name: '', email: '', phone: '', date: '', time: '', guests: '2', notes: '' });
   const [status,       setStatus]       = useState('');   // '' | 'sending' | 'success' | 'error'

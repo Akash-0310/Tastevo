@@ -5,6 +5,7 @@ import AnimatedSection from '../components/AnimatedSection';
 import { FiArrowRight, FiDownload, FiBookOpen, FiVideo, FiFileText, FiExternalLink, FiZap, FiThumbsUp, FiMail } from 'react-icons/fi';
 import { MdRestaurantMenu, MdEco, MdFoodBank } from 'react-icons/md';
 import { QRCodeSVG } from 'qrcode.react';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const blogPosts = [
   {
@@ -93,6 +94,8 @@ const quickTips = [
 ];
 
 const Resources = () => {
+  useDocumentTitle('Resources');
+
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterDone, setNewsletterDone]   = useState(false);
 

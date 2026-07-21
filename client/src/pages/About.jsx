@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import AnimatedSection from '../components/AnimatedSection';
 import { FiHeart, FiAward, FiUsers, FiTarget, FiStar, FiCheck, FiArrowRight, FiGlobe, FiPackage } from 'react-icons/fi';
 import { MdEco, MdDeliveryDining } from 'react-icons/md';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const team = [
   {
@@ -90,6 +91,8 @@ const milestones = [
 ];
 
 const About = () => {
+  useDocumentTitle('About Us');
+
   return (
     <div className="about-page">
       {/* Hero */}

@@ -4,6 +4,7 @@ import AnimatedSection from '../components/AnimatedSection';
 import MenuCard from '../components/MenuCard';
 import { FiSearch, FiFilter } from 'react-icons/fi';
 import { MdRestaurantMenu } from 'react-icons/md';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const menuData = {
   starters: [
@@ -246,6 +247,7 @@ const categories = [
 ];
 
 const Menu = () => {
+  useDocumentTitle('Our Menu');
   const [activeCategory, setActiveCategory] = useState('all');
   const [search, setSearch] = useState('');
   const [dietFilter, setDietFilter] = useState('all');

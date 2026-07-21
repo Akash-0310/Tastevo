@@ -7,6 +7,7 @@ import {
   FiAlertTriangle, FiLock, FiUser, FiMessageSquare, FiChevronDown,
 } from 'react-icons/fi';
 import { BUSINESS_EMAIL, BUSINESS_PHONE } from '../config/constants';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const lastUpdated = 'June 2025';
 
@@ -218,6 +219,8 @@ const ClauseItem = ({ clause, isOpen, onToggle }) => (
 );
 
 const Terms = () => {
+  useDocumentTitle('Terms of Service');
+
   const [openClause, setOpenClause] = useState(0);
 
   return (

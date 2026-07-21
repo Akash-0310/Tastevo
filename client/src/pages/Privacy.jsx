@@ -7,6 +7,7 @@ import {
   FiSmartphone, FiUsers, FiRefreshCw, FiChevronDown,
 } from 'react-icons/fi';
 import { BUSINESS_EMAIL } from '../config/constants';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const sections = [
   {
@@ -197,6 +198,8 @@ const AccordionItem = ({ section, isOpen, onToggle }) => (
 );
 
 const Privacy = () => {
+  useDocumentTitle('Privacy Policy');
+
   const [openSection, setOpenSection] = useState(0);
 
   return (

@@ -7,6 +7,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { MdRestaurantMenu, MdDeliveryDining, MdFoodBank } from 'react-icons/md';
 import { QRCodeSVG } from 'qrcode.react';
 import { whatsappUrl, WHATSAPP_NUMBER } from '../config/constants';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const featuredItems = [
   {
@@ -50,6 +51,8 @@ const stats = [
 // For now we invite real customers to share their experience.
 
 const Home = () => {
+  useDocumentTitle('Digital Restaurant Menu');
+
   return (
     <div className="home">
       {/* Hero Section */}

@@ -5,6 +5,7 @@ import AnimatedSection from '../components/AnimatedSection';
 import { FiChevronDown, FiSearch, FiShoppingCart, FiTruck, FiPhone, FiMessageCircle } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { whatsappUrl, BUSINESS_PHONE } from '../config/constants';
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const faqCategories = {
   'Ordering & Delivery': [
@@ -140,6 +141,8 @@ const FAQItem = ({ question, answer, isOpen, onClick }) => (
 );
 
 const FAQ = () => {
+  useDocumentTitle('FAQ');
+
   const [openIndex, setOpenIndex] = useState(null);
   const [activeCategory, setActiveCategory] = useState(Object.keys(faqCategories)[0]);
   const [search, setSearch] = useState('');
