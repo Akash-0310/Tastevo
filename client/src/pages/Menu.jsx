@@ -283,6 +283,13 @@ const Menu = () => {
 
   const filteredItems = getFilteredItems();
 
+  // Total dishes in the current category before the search/diet filters are
+  // applied — used to show "Showing X of Y" when a filter is narrowing results.
+  const categoryTotal = activeCategory === 'all'
+    ? getAllItems().length
+    : menuData[activeCategory].length;
+  const hasActiveFilter = search.trim() !== '' || dietFilter !== 'all';
+
   return (
     <div className="menu-page">
       {/* Hero */}
@@ -365,15 +372,19 @@ const Menu = () => {
       {/* Menu Items */}
       <section className="menu-items section">
         <div className="container">
-          {activeCategory !== 'all' && (
-            <AnimatedSection className="section__header">
+          <AnimatedSection className="section__header">
+            {activeCategory !== 'all' && (
               <h2 className="section__title">
                 {categories.find(c => c.key === activeCategory)?.icon}{' '}
                 {categories.find(c => c.key === activeCategory)?.label}
               </h2>
-              <p className="menu-items__count">{filteredItems.length} items found</p>
-            </AnimatedSection>
-          )}
+            )}
+            <p className="menu-items__count">
+              {hasActiveFilter
+                ? `Showing ${filteredItems.length} of ${categoryTotal} dishes`
+                : `${filteredItems.length} ${filteredItems.length === 1 ? 'dish' : 'dishes'}`}
+            </p>
+          </AnimatedSection>
 
           <AnimatePresence mode="wait">
             {filteredItems.length > 0 ? (
