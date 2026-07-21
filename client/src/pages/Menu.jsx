@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedSection from '../components/AnimatedSection';
 import MenuCard from '../components/MenuCard';
-import { FiSearch, FiFilter } from 'react-icons/fi';
+import { FiSearch, FiFilter, FiX } from 'react-icons/fi';
 import { MdRestaurantMenu } from 'react-icons/md';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 
@@ -320,6 +320,16 @@ const Menu = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
+              {search && (
+                <button
+                  type="button"
+                  className="menu-filters__clear"
+                  onClick={() => setSearch('')}
+                  aria-label="Clear search"
+                >
+                  <FiX aria-hidden="true" />
+                </button>
+              )}
             </div>
             <div className="menu-filters__diet">
               <FiFilter aria-hidden="true" />

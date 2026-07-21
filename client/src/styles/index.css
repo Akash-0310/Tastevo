@@ -1054,6 +1054,25 @@ img {
   font-family: var(--font-sans);
 }
 
+.menu-filters__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 2px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.menu-filters__clear:hover {
+  color: var(--text);
+  background: var(--border);
+}
+
 .menu-filters__diet {
   display: flex;
   align-items: center;
