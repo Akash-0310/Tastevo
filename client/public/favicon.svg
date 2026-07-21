@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Tastevo">
+  <rect width="64" height="64" rx="14" fill="#1e40af"/>
+  <!-- Fork -->
+  <g fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round">
+    <path d="M22 15v10"/>
+    <path d="M27 15v10"/>
+    <path d="M17 15v10"/>
+    <path d="M22 25c0 4-2.5 4-2.5 8L20 49"/>
+  </g>
+  <path d="M22 25c0 4 2.5 4 2.5 8L24 49" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+  <!-- Knife -->
+  <path d="M43 15c-4 3-6 9-6 15s2 8 4 8l-.8 11" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
