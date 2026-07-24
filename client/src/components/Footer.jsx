@@ -126,11 +126,17 @@ const Footer = () => {
               {subscribed ? '✓ Subscribed!' : 'Subscribe'}
             </button>
           </form>
-          {subError && (
-            <p style={{ color: 'var(--color-error, #e53e3e)', marginTop: '0.5rem', fontSize: '0.875rem' }}>
-              {subError}
-            </p>
-          )}
+          <p
+            role="status"
+            aria-live="polite"
+            style={{
+              color: subError ? 'var(--color-error, #e53e3e)' : 'var(--color-success, #38a169)',
+              marginTop: '0.5rem',
+              fontSize: '0.875rem',
+            }}
+          >
+            {subError || (subscribed ? 'Successfully subscribed to our newsletter!' : '')}
+          </p>
         </div>
 
         <div className="footer__bottom">
