@@ -43,10 +43,15 @@ const MenuCard = ({ item, index }) => {
         </div>
         <p className="menu-card__desc">{item.description}</p>
         {item.rating && (
-          <div className="menu-card__rating">
+          <div
+            className="menu-card__rating"
+            role="img"
+            aria-label={`Rated ${item.rating} out of 5${item.reviews ? ` from ${item.reviews} reviews` : ''}`}
+          >
             {[...Array(5)].map((_, i) => (
               <FiStar
                 key={i}
+                aria-hidden="true"
                 className={`menu-card__star ${i < item.rating ? 'menu-card__star--filled' : ''}`}
               />
             ))}
