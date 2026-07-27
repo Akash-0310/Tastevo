@@ -8,6 +8,18 @@ import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
+// Today as YYYY-MM-DD for the reservation date's `min`. Built from the local
+// parts rather than toISOString(), which serialises in UTC and would still name
+// yesterday before 05:30 IST — exactly the past date the API rejects.
+const todayStr = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+
+// Party sizes the API accepts: it validates `guests` as an integer (1–50), so
+// every option here has to be a bare number.
+const PARTY_SIZES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30];
+
 const reasons = [
   { icon: <FiShoppingCart />, title: 'Orders & Delivery', desc: 'Track your order, report an issue, or request a refund.' },
   { icon: <FiCalendar />,     title: 'Reservations',     desc: 'Book a table, plan a private dining event, or modify a booking.' },
@@ -351,6 +363,7 @@ const Contact = () => {
                       <input
                         type="date"
                         value={reserveData.date}
+                        min={todayStr()}
                         onChange={(e) => setReserveData({ ...reserveData, date: e.target.value })}
                         required
                       />
@@ -372,10 +385,11 @@ const Contact = () => {
                         value={reserveData.guests}
                         onChange={(e) => setReserveData({ ...reserveData, guests: e.target.value })}
                       >
-                        {[1,2,3,4,5,6,7,8,9,10].map(n => (
-                          <option key={n} value={n}>{n} {n === 1 ? 'Guest' : 'Guests'}</option>
+                        {PARTY_SIZES.map(n => (
+                          <option key={n} value={n}>
+                            {n} {n === 1 ? 'Guest' : 'Guests'}{n > 10 ? ' (Large Party)' : ''}
+                          </option>
                         ))}
-                        <option value="10+">10+ (Large Party)</option>
                       </select>
                     </div>
                     <div className="contact-form__group">
