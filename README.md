@@ -1,4 +1,4 @@
-# Tastevo — Digital Restaurant Menu.
+# Tastevo — Digital Restaurant Menu
 
 ## What it is
 
@@ -28,6 +28,5 @@ The menu is designed to look as appetizing as the food it represents — with ph
 - **Rich item detail** — photos, descriptions, pricing, and tags for dietary preferences.
 - **Informational pages** (About, FAQ, Contact, Resources) that complete the restaurant's story.
 - **Contact flow** for reservations, inquiries, and feedback.
-- **Responsive, appetite-inducing design** that reads cleanly on every screen.
 
 
