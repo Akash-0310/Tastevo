@@ -268,8 +268,9 @@ const Contact = () => {
               {activeTab === 'contact' ? (
                 <form className="contact-form" onSubmit={handleContact}>
                   <div className="contact-form__group">
-                    <label>Full Name *</label>
+                    <label htmlFor="contact-name">Full Name *</label>
                     <input
+                      id="contact-name"
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -279,8 +280,9 @@ const Contact = () => {
                   </div>
                   <div className="contact-form__row">
                     <div className="contact-form__group">
-                      <label>Email *</label>
+                      <label htmlFor="contact-email">Email *</label>
                       <input
+                        id="contact-email"
                         type="email"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -289,8 +291,9 @@ const Contact = () => {
                       />
                     </div>
                     <div className="contact-form__group">
-                      <label>Phone</label>
+                      <label htmlFor="contact-phone">Phone</label>
                       <input
+                        id="contact-phone"
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -299,8 +302,9 @@ const Contact = () => {
                     </div>
                   </div>
                   <div className="contact-form__group">
-                    <label>Message *</label>
+                    <label htmlFor="contact-message">Message *</label>
                     <textarea
+                      id="contact-message"
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="How can we help you?"
@@ -327,8 +331,9 @@ const Contact = () => {
               ) : (
                 <form className="contact-form" onSubmit={handleReservation}>
                   <div className="contact-form__group">
-                    <label>Full Name *</label>
+                    <label htmlFor="reserve-name">Full Name *</label>
                     <input
+                      id="reserve-name"
                       type="text"
                       value={reserveData.name}
                       onChange={(e) => setReserveData({ ...reserveData, name: e.target.value })}
@@ -338,8 +343,9 @@ const Contact = () => {
                   </div>
                   <div className="contact-form__row">
                     <div className="contact-form__group">
-                      <label>Email</label>
+                      <label htmlFor="reserve-email">Email</label>
                       <input
+                        id="reserve-email"
                         type="email"
                         value={reserveData.email}
                         onChange={(e) => setReserveData({ ...reserveData, email: e.target.value })}
@@ -347,8 +353,9 @@ const Contact = () => {
                       />
                     </div>
                     <div className="contact-form__group">
-                      <label>Phone *</label>
+                      <label htmlFor="reserve-phone">Phone *</label>
                       <input
+                        id="reserve-phone"
                         type="tel"
                         value={reserveData.phone}
                         onChange={(e) => setReserveData({ ...reserveData, phone: e.target.value })}
@@ -359,8 +366,9 @@ const Contact = () => {
                   </div>
                   <div className="contact-form__row">
                     <div className="contact-form__group">
-                      <label>Date *</label>
+                      <label htmlFor="reserve-date">Date *</label>
                       <input
+                        id="reserve-date"
                         type="date"
                         value={reserveData.date}
                         min={todayStr()}
@@ -369,8 +377,9 @@ const Contact = () => {
                       />
                     </div>
                     <div className="contact-form__group">
-                      <label>Time *</label>
+                      <label htmlFor="reserve-time">Time *</label>
                       <input
+                        id="reserve-time"
                         type="time"
                         value={reserveData.time}
                         onChange={(e) => setReserveData({ ...reserveData, time: e.target.value })}
@@ -380,8 +389,9 @@ const Contact = () => {
                   </div>
                   <div className="contact-form__row">
                     <div className="contact-form__group">
-                      <label>Guests *</label>
+                      <label htmlFor="reserve-guests">Guests *</label>
                       <select
+                        id="reserve-guests"
                         value={reserveData.guests}
                         onChange={(e) => setReserveData({ ...reserveData, guests: e.target.value })}
                       >
@@ -393,8 +403,9 @@ const Contact = () => {
                       </select>
                     </div>
                     <div className="contact-form__group">
-                      <label>Special Requests</label>
+                      <label htmlFor="reserve-notes">Special Requests</label>
                       <input
+                        id="reserve-notes"
                         type="text"
                         value={reserveData.notes}
                         onChange={(e) => setReserveData({ ...reserveData, notes: e.target.value })}
